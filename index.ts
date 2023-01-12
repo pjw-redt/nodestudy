@@ -38,18 +38,27 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello, World!");
 });
 
+interface postData {
+  Title: String;
+  Context: String;
+  Writer: String;
+  Date: Number;
+  Tag: Array<String>;
+}
+
 //addPost
-app.post("/", async (req: Request, res: Response) => {
+app.post("/addPost", async (req: Request, res: Response) => {
   let postID: string = req.body.postID;
 
-  const NEW_DATA = {
-    제목: "노드 과제1 질문",
-    내용: "과제 어려웠어요",
-    작성자: "juju",
-    날짜: 20230112,
+  const NEW_DATA: postData = {
+    Title: req.body.title,
+    Context: req.body.context,
+    Writer: req.body.writer,
+    Date: req.body.date,
+    Tag: req.body.tag,
   };
 
-  await setDoc(doc(firebaseDB, "질문글", "노드 과제1 질문"), NEW_DATA);
+  await setDoc(doc(firebaseDB, "Q&A", "assignment1"), NEW_DATA);
   res.send(postID);
 });
 
