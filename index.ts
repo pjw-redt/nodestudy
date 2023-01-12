@@ -39,11 +39,11 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 interface postData {
-  Title: String;
-  Context: String;
-  Writer: String;
-  Date: Number;
-  Tag: Array<String>;
+  postTitle: String;
+  postContext: String;
+  postWriter: String;
+  postDate: Number;
+  postTag: Array<String>;
 }
 
 //addPost
@@ -51,11 +51,11 @@ app.post("/addPost", async (req: Request, res: Response) => {
   let postID: string = req.body.postID;
 
   const NEW_DATA: postData = {
-    Title: req.body.title,
-    Context: req.body.context,
-    Writer: req.body.writer,
-    Date: req.body.date,
-    Tag: req.body.tag,
+    postTitle: req.body.postTitle,
+    postContext: req.body.postContext,
+    postWriter: req.body.postWriter,
+    postDate: req.body.postDate,
+    postTag: req.body.postTag,
   };
 
   await setDoc(doc(firebaseDB, "Q&A", "assignment1"), NEW_DATA);
@@ -63,9 +63,10 @@ app.post("/addPost", async (req: Request, res: Response) => {
 });
 
 //getPostList
-// app.post("/getPostList", async (req: Request, res: Response) => {
-//   res.send();
-// });
+app.post("/getPostList", async (req: Request, res: Response) => {
+  let postType: string = req.body.postType;
+  res.send("??");
+});
 
 //getPostData
 app.post("/getPostData", async (req: Request, res: Response) => {
