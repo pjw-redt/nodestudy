@@ -3,12 +3,12 @@ import { FirebaseApp, FirebaseOptions, initializeApp } from "firebase/app";
 import {
   Firestore,
   getFirestore,
-  doc,
-  getDoc,
-  collection,
+  query,
   getDocs,
-  setDoc,
+  where,
+  collection,
   addDoc,
+  getCountFromServer,
 } from "firebase/firestore";
 import dotenv from "dotenv";
 
@@ -63,21 +63,25 @@ app.post("/addPost", async (req: Request, res: Response) => {
 
 //getPostList
 app.post("/getPostList", async (req: Request, res: Response) => {
-  res.send();
+  const coll = collection(firebaseDB, "Q&A");
+  const snapshot = await getCountFromServer(coll);
+  console.log("post_num: ", snapshot.data().count);
+  res.send(snapshot.data().count);
 });
 
 //getPostData
-app.post("/getPostData", async (req: Request, res: Response) => {
-  const docRef = doc(firebaseDB, "about", "0001");
-  const docSnap = await getDoc(docRef);
+app.get("/getPostData", async (req: Request, res: Response) => {
+  const q = query(
+    collection(firebaseDB, "Q&A"),
+    where("assignment1", "==", true) //특정 doc내용 get
+  );
 
-  if (docSnap.exists()) {
-    console.log("Document data:", docSnap.data());
-  } else {
-    console.log("No such document!");
-  }
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    console.log(doc.id, " => ", doc.data());
+  });
 
-  res.send(docSnap.data());
+  res.send(querySnapshot);
 });
 
 app.listen(8080, () => {
