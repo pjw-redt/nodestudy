@@ -8,6 +8,7 @@ import {
   collection,
   getDocs,
   setDoc,
+  addDoc,
 } from "firebase/firestore";
 import dotenv from "dotenv";
 
@@ -40,7 +41,7 @@ app.get("/", (req: Request, res: Response) => {
 
 interface postData {
   postTitle: String;
-  postContext: String;
+  postContent: String;
   postWriter: String;
   postDate: Number;
   postTag: Array<String>;
@@ -48,24 +49,21 @@ interface postData {
 
 //addPost
 app.post("/addPost", async (req: Request, res: Response) => {
-  let postID: string = req.body.postID;
-
   const NEW_DATA: postData = {
     postTitle: req.body.postTitle,
-    postContext: req.body.postContext,
+    postContent: req.body.postContent,
     postWriter: req.body.postWriter,
     postDate: req.body.postDate,
     postTag: req.body.postTag,
   };
 
-  await setDoc(doc(firebaseDB, "Q&A", "assignment1"), NEW_DATA);
+  const postID = await addDoc(collection(firebaseDB, "Q&A"), NEW_DATA);
   res.send(postID);
 });
 
 //getPostList
 app.post("/getPostList", async (req: Request, res: Response) => {
-  let postType: string = req.body.postType;
-  res.send("??");
+  res.send();
 });
 
 //getPostData
